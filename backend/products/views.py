@@ -1,15 +1,23 @@
-from rest_framework import generics, mixins
+from rest_framework import authentication, generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
+from api.authentication import TokenAuthentication
+
 from .models import Product
 from .serializers import ProductSerializer
+from .permissions import IsStaffEditorPermission
 
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    authentication_classes = [
+        authentication.SessionAuthentication,
+        TokenAuthentication
+    ]
+    permission_classes = [IsStaffEditorPermission]
 
     def perform_create(self, serializer):
         # serializer.save(user=self.request.user)
@@ -31,6 +39,7 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    permission_classes = [permissions.DjangoModelPermissions]
 
     def perform_update(self, serializer):
         instance = serializer.save()
@@ -53,6 +62,11 @@ class ProductMixinView(
     mixins.RetrieveModelMixin,
     generics.GenericAPIView
     ):
+    """
+    This is how the other generic API views are created
+    They inherit from GenericAPIView and then mixin in the
+    appropriate functionality
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
