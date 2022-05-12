@@ -1,6 +1,3 @@
-from asyncore import write
-from xml.dom.minidom import CharacterData
-from django.forms import CharField
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -14,17 +11,16 @@ class ProductSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='product-detail', lookup_field='pk')
     #email = serializers.EmailField(source='user.email', write_only=True)
     title = serializers.CharField(validators=[validate_title_no_hello, unique_product_title])
-    name = serializers.CharField(source='title', read_only=True)
+    #name = serializers.CharField(source='title', read_only=True)
 
     class Meta:
         model = Product
         fields = [
-            'email',
+            #'user',
             'url',
             'edit_url',
             'id',
             'title',
-            'name',
             'content',
             'price',
             'sale_price',
