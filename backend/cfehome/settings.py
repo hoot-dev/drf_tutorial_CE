@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,8 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party api services
+    'algoliasearch_django',
+    # third party packages
     'rest_framework',
     'rest_framework.authtoken',
+
+    # internal apps
     'api',
     'products',
     'search',
@@ -141,4 +146,11 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10
+}
+
+
+ALGOLIA = {
+    'APPLICATION_ID': 'WUWD5WIVYM',
+    'API_KEY': os.environ.get('ALGOLIA_API_KEY'),
+    'INDEX_PREFIX': 'cfe'
 }
